@@ -1,0 +1,7 @@
+{
+  "name": "Smart QR Scanner & Generator",
+  "description": "A complete, modern offline QR code and barcode scanner and generator utility with smart detection, customization, and local history.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
