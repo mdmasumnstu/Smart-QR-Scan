@@ -3,17 +3,21 @@ package com.example.ui.screens
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -27,6 +31,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Badge
 import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -42,11 +47,14 @@ import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material.icons.filled.Wifi
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -90,6 +98,7 @@ fun HomeScreen(
     onStartIdScan: () -> Unit = {}
 ) {
     val context = LocalContext.current
+    val isDark = isSystemInDarkTheme()
 
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
@@ -187,29 +196,30 @@ fun HomeScreen(
                     onClick = { onNavigate(AppScreen.SCANNER) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(110.dp)
+                        .defaultMinSize(minHeight = 114.dp)
                         .testTag("home_scan_qr_card"),
                     shape = RoundedCornerShape(20.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = Color.Transparent
-                    )
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
                 ) {
                     Box(
                         modifier = Modifier
-                            .fillMaxSize()
+                            .fillMaxWidth()
                             .background(
                                 Brush.linearGradient(
                                     listOf(Color(0xFF0052D4), Color(0xFF4364F7), Color(0xFF6FB1FC))
                                 )
                             )
-                            .padding(20.dp)
+                            .padding(horizontal = 20.dp, vertical = 18.dp)
                     ) {
                         Row(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Column {
+                            Column(modifier = Modifier.weight(1f)) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Icon(
                                         imageVector = Icons.Default.CameraAlt,
@@ -221,21 +231,26 @@ fun HomeScreen(
                                     Text(
                                         text = "Scan QR / Barcode",
                                         color = Color.White,
-                                        fontSize = 20.sp,
-                                        fontWeight = FontWeight.Bold
+                                        fontSize = 19.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
                                     )
                                 }
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = "Instant camera scan with auto detection",
-                                    color = Color.White.copy(alpha = 0.85f),
-                                    fontSize = 13.sp
+                                    color = Color.White.copy(alpha = 0.9f),
+                                    fontSize = 13.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                             }
+                            Spacer(modifier = Modifier.width(12.dp))
                             Box(
                                 modifier = Modifier
                                     .size(44.dp)
-                                    .background(Color.White.copy(alpha = 0.2f), CircleShape),
+                                    .background(Color.White.copy(alpha = 0.22f), CircleShape),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
@@ -263,45 +278,54 @@ fun HomeScreen(
                         },
                         modifier = Modifier
                             .weight(1f)
-                            .height(100.dp)
+                            .defaultMinSize(minHeight = 124.dp)
                             .testTag("home_scan_image_card"),
-                        shape = RoundedCornerShape(16.dp),
+                        shape = RoundedCornerShape(18.dp),
                         colors = CardDefaults.elevatedCardColors(
                             containerColor = MaterialTheme.colorScheme.surface
-                        )
+                        ),
+                        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
                     ) {
                         Column(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(14.dp),
-                            verticalArrangement = Arrangement.SpaceBetween
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            verticalArrangement = Arrangement.Center
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .size(36.dp)
-                                    .background(Color(0xFFE0F2FE), RoundedCornerShape(10.dp)),
+                                    .size(42.dp)
+                                    .background(
+                                        if (isDark) Color(0xFF0C4A6E) else Color(0xFFE0F2FE),
+                                        RoundedCornerShape(12.dp)
+                                    ),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Image,
                                     contentDescription = null,
-                                    tint = Color(0xFF0284C7),
-                                    modifier = Modifier.size(20.dp)
+                                    tint = if (isDark) Color(0xFF38BDF8) else Color(0xFF0284C7),
+                                    modifier = Modifier.size(24.dp)
                                 )
                             }
-                            Column {
-                                Text(
-                                    text = "Scan Image",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 15.sp,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                                Text(
-                                    text = "From Gallery",
-                                    fontSize = 12.sp,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
+                            Spacer(modifier = Modifier.height(14.dp))
+                            Text(
+                                text = "Scan Image",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 15.sp,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            Spacer(modifier = Modifier.height(3.dp))
+                            Text(
+                                text = "From Gallery",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
                         }
                     }
 
@@ -309,50 +333,59 @@ fun HomeScreen(
                         onClick = { onNavigate(AppScreen.CREATE_QR) },
                         modifier = Modifier
                             .weight(1f)
-                            .height(100.dp)
+                            .defaultMinSize(minHeight = 124.dp)
                             .testTag("home_create_qr_card"),
-                        shape = RoundedCornerShape(16.dp),
+                        shape = RoundedCornerShape(18.dp),
                         colors = CardDefaults.elevatedCardColors(
                             containerColor = MaterialTheme.colorScheme.surface
-                        )
+                        ),
+                        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
                     ) {
                         Column(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(14.dp),
-                            verticalArrangement = Arrangement.SpaceBetween
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            verticalArrangement = Arrangement.Center
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .size(36.dp)
-                                    .background(Color(0xFFEDE9FE), RoundedCornerShape(10.dp)),
+                                    .size(42.dp)
+                                    .background(
+                                        if (isDark) Color(0xFF3B0764) else Color(0xFFEDE9FE),
+                                        RoundedCornerShape(12.dp)
+                                    ),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.AutoAwesome,
                                     contentDescription = null,
-                                    tint = Color(0xFF7C3AED),
-                                    modifier = Modifier.size(20.dp)
+                                    tint = if (isDark) Color(0xFFA78BFA) else Color(0xFF7C3AED),
+                                    modifier = Modifier.size(24.dp)
                                 )
                             }
-                            Column {
-                                Text(
-                                    text = "Create QR",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 15.sp,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                                Text(
-                                    text = "Custom Styles",
-                                    fontSize = 12.sp,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
+                            Spacer(modifier = Modifier.height(14.dp))
+                            Text(
+                                text = "Create QR",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 15.sp,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            Spacer(modifier = Modifier.height(3.dp))
+                            Text(
+                                text = "Custom Styles",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
                         }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(14.dp))
 
                 // Three Smart Utility Cards: [ 🪪 ID Card Scan ] [ 📸 ID Photo Maker ] [ 📚 Batch Scan ]
                 Row(
@@ -363,37 +396,44 @@ fun HomeScreen(
                         onClick = onStartIdScan,
                         modifier = Modifier
                             .weight(1f)
-                            .height(84.dp)
+                            .defaultMinSize(minHeight = 98.dp)
                             .testTag("home_id_card_scan_card"),
-                        shape = RoundedCornerShape(14.dp),
+                        shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.elevatedCardColors(
                             containerColor = MaterialTheme.colorScheme.surface
-                        )
+                        ),
+                        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp)
                     ) {
                         Column(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(10.dp),
-                            verticalArrangement = Arrangement.SpaceBetween
+                                .fillMaxWidth()
+                                .padding(12.dp),
+                            verticalArrangement = Arrangement.Center
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .size(30.dp)
-                                    .background(Color(0xFFE0F2FE), CircleShape),
+                                    .size(34.dp)
+                                    .background(
+                                        if (isDark) Color(0xFF0C4A6E) else Color(0xFFE0F2FE),
+                                        CircleShape
+                                    ),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Badge,
                                     contentDescription = null,
-                                    tint = Color(0xFF0284C7),
-                                    modifier = Modifier.size(16.dp)
+                                    tint = if (isDark) Color(0xFF38BDF8) else Color(0xFF0284C7),
+                                    modifier = Modifier.size(18.dp)
                                 )
                             }
+                            Spacer(modifier = Modifier.height(10.dp))
                             Text(
                                 text = "ID Card Scan",
-                                fontWeight = FontWeight.Bold,
+                                fontWeight = FontWeight.SemiBold,
                                 fontSize = 12.sp,
-                                maxLines = 1,
+                                lineHeight = 15.sp,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                         }
@@ -403,37 +443,44 @@ fun HomeScreen(
                         onClick = { onNavigate(AppScreen.ID_PHOTO_MAKER) },
                         modifier = Modifier
                             .weight(1f)
-                            .height(84.dp)
+                            .defaultMinSize(minHeight = 98.dp)
                             .testTag("home_id_photo_maker_card"),
-                        shape = RoundedCornerShape(14.dp),
+                        shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.elevatedCardColors(
                             containerColor = MaterialTheme.colorScheme.surface
-                        )
+                        ),
+                        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp)
                     ) {
                         Column(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(10.dp),
-                            verticalArrangement = Arrangement.SpaceBetween
+                                .fillMaxWidth()
+                                .padding(12.dp),
+                            verticalArrangement = Arrangement.Center
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .size(30.dp)
-                                    .background(Color(0xFFFEF3C7), CircleShape),
+                                    .size(34.dp)
+                                    .background(
+                                        if (isDark) Color(0xFF78350F) else Color(0xFFFEF3C7),
+                                        CircleShape
+                                    ),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Portrait,
                                     contentDescription = null,
-                                    tint = Color(0xFFD97706),
-                                    modifier = Modifier.size(16.dp)
+                                    tint = if (isDark) Color(0xFFFBBF24) else Color(0xFFD97706),
+                                    modifier = Modifier.size(18.dp)
                                 )
                             }
+                            Spacer(modifier = Modifier.height(10.dp))
                             Text(
                                 text = "ID Photo Maker",
-                                fontWeight = FontWeight.Bold,
+                                fontWeight = FontWeight.SemiBold,
                                 fontSize = 12.sp,
-                                maxLines = 1,
+                                lineHeight = 15.sp,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                         }
@@ -443,37 +490,44 @@ fun HomeScreen(
                         onClick = onStartBatchScan,
                         modifier = Modifier
                             .weight(1f)
-                            .height(84.dp)
+                            .defaultMinSize(minHeight = 98.dp)
                             .testTag("home_batch_scan_card"),
-                        shape = RoundedCornerShape(14.dp),
+                        shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.elevatedCardColors(
                             containerColor = MaterialTheme.colorScheme.surface
-                        )
+                        ),
+                        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp)
                     ) {
                         Column(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(10.dp),
-                            verticalArrangement = Arrangement.SpaceBetween
+                                .fillMaxWidth()
+                                .padding(12.dp),
+                            verticalArrangement = Arrangement.Center
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .size(30.dp)
-                                    .background(Color(0xFFE0E7FF), CircleShape),
+                                    .size(34.dp)
+                                    .background(
+                                        if (isDark) Color(0xFF312E81) else Color(0xFFE0E7FF),
+                                        CircleShape
+                                    ),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Layers,
                                     contentDescription = null,
-                                    tint = Color(0xFF4F46E5),
-                                    modifier = Modifier.size(16.dp)
+                                    tint = if (isDark) Color(0xFF818CF8) else Color(0xFF4F46E5),
+                                    modifier = Modifier.size(18.dp)
                                 )
                             }
+                            Spacer(modifier = Modifier.height(10.dp))
                             Text(
                                 text = "Batch Scan",
-                                fontWeight = FontWeight.Bold,
+                                fontWeight = FontWeight.SemiBold,
                                 fontSize = 12.sp,
-                                maxLines = 1,
+                                lineHeight = 15.sp,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                         }
@@ -509,35 +563,59 @@ fun HomeScreen(
             if (recentScans.isEmpty()) {
                 item {
                     Surface(
-                        shape = RoundedCornerShape(16.dp),
-                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+                        shape = RoundedCornerShape(18.dp),
+                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 8.dp)
+                            .padding(top = 10.dp)
                     ) {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 36.dp, horizontal = 20.dp),
+                                .padding(vertical = 32.dp, horizontal = 24.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.QrCodeScanner,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                                modifier = Modifier.size(48.dp)
-                            )
-                            Spacer(modifier = Modifier.height(12.dp))
+                            Box(
+                                modifier = Modifier
+                                    .size(56.dp)
+                                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f), CircleShape),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.QrCodeScanner,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(30.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(14.dp))
                             Text(
                                 text = "No scans yet",
-                                fontWeight = FontWeight.SemiBold,
+                                fontWeight = FontWeight.Bold,
+                                style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
+                            Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "Tap 'Scan QR' or select an image to start",
+                                text = "Tap 'Scan QR / Barcode' or select an image to start scanning instantly",
                                 fontSize = 13.sp,
+                                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            FilledTonalButton(
+                                onClick = { onNavigate(AppScreen.SCANNER) },
+                                shape = RoundedCornerShape(12.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.CameraAlt,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text("Open Scanner", fontWeight = FontWeight.SemiBold)
+                            }
                         }
                     }
                 }
