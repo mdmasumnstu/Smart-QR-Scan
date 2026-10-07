@@ -28,6 +28,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
@@ -306,11 +307,44 @@ fun CreateQrScreen(
                                 onValueChange = { urlText = it },
                                 label = { Text("Website URL") },
                                 placeholder = { Text("https://example.com") },
+                                leadingIcon = {
+                                    Icon(Icons.Default.Language, contentDescription = null)
+                                },
+                                trailingIcon = {
+                                    if (urlText.isNotEmpty() && urlText != "https://") {
+                                        IconButton(onClick = { urlText = "https://" }) {
+                                            Icon(Icons.Default.Close, contentDescription = "Clear")
+                                        }
+                                    }
+                                },
                                 singleLine = true,
+                                shape = RoundedCornerShape(12.dp),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .testTag("input_url")
                             )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .horizontalScroll(rememberScrollState()),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                listOf("https://", ".com", ".org", ".io", "www.").forEach { chipText ->
+                                    androidx.compose.material3.SuggestionChip(
+                                        onClick = {
+                                            if (chipText == "https://") {
+                                                if (!urlText.startsWith("https://")) {
+                                                    urlText = "https://$urlText"
+                                                }
+                                            } else {
+                                                urlText += chipText
+                                            }
+                                        },
+                                        label = { Text(chipText, fontSize = 12.sp) }
+                                    )
+                                }
+                            }
                         }
                         QrCreateType.TEXT -> {
                             OutlinedTextField(
@@ -318,8 +352,22 @@ fun CreateQrScreen(
                                 onValueChange = { plainText = it },
                                 label = { Text("Plain Text") },
                                 placeholder = { Text("Enter text to encode...") },
+                                leadingIcon = {
+                                    Icon(Icons.Default.TextFields, contentDescription = null)
+                                },
+                                trailingIcon = {
+                                    if (plainText.isNotEmpty()) {
+                                        IconButton(onClick = { plainText = "" }) {
+                                            Icon(Icons.Default.Close, contentDescription = "Clear")
+                                        }
+                                    }
+                                },
                                 minLines = 3,
                                 maxLines = 6,
+                                supportingText = {
+                                    Text("${plainText.length} characters")
+                                },
+                                shape = RoundedCornerShape(12.dp),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .testTag("input_plain_text")

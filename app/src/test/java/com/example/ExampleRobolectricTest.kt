@@ -52,5 +52,26 @@ class ExampleRobolectricTest {
         assertTrue(bitmap!!.width > 0)
         assertTrue(bitmap.height > 0)
     }
+
+    @Test
+    fun `generate qr bitmap for plain text and rounded dots`() {
+        val bitmap = QrGenerator.generateQrBitmap(
+            content = "Hello, world! This is a test message for ZXing QR code generator.",
+            size = 300,
+            dotStyle = QrDotStyle.ROUNDED
+        )
+        assertNotNull(bitmap)
+        assertEquals(300, bitmap!!.width)
+        assertEquals(300, bitmap.height)
+    }
+
+    @Test
+    fun `generate qr bitmap returns null for empty string`() {
+        val bitmap = QrGenerator.generateQrBitmap(
+            content = "",
+            size = 200
+        )
+        org.junit.Assert.assertNull(bitmap)
+    }
 }
 
